@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Interactive career roadmap for becoming a Principal Secure Infrastructure Engineer — Bitcoin security, confidential computing, AI infrastructure, and high-trust systems.">
+<title>Secure Infrastructure Roadmap</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0e14;
+  --bg2: #111820;
+  --bg3: #1a2230;
+  --border: #1e2a3a;
+  --text: #c5cdd8;
+  --text-dim: #5a6a7a;
+  --text-bright: #e8ecf1;
+  --accent: #00ff88;
+  --accent2: #ff6b35;
+  --accent3: #5b8af5;
+  --purple: #c084fc;
+  --yellow: #facc15;
+  --done: #00ff88;
+  --progress: #22d3ee;
+  --notstarted: #3a4a5a;
+  --radius: 10px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+/* ── HEADER ── */
+.hero {
+  text-align: center;
+  padding: 3rem 1rem 2.5rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 2.5rem;
+}
+
+.hero h1 {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: clamp(1.4rem, 4vw, 2.2rem);
+  font-weight: 600;
+  color: var(--text-bright);
+  letter-spacing: -0.5px;
+  margin-bottom: 0.5rem;
+}
+
+.hero h1 .accent { color: var(--accent); }
+
+.hero .subtitle {
+  font-size: 0.95rem;
+  color: var(--text-dim);
+  font-weight: 300;
+}
+
+/* ── PHASE SECTION ── */
+.phase {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 1.5rem;
+  background: var(--bg2);
+  overflow: hidden;
+  transition: border-color 0.3s;
+}
+
+.phase:hover { border-color: #2a3a4a; }
+
+.phase-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.1rem 1.4rem;
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  flex-wrap: wrap;
+}
+
+.phase-header:hover { background: rgba(255,255,255,0.02); }
+
+.phase-number {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.2rem 0.55rem;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+.phase-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-bright);
+  flex: 1;
+  min-width: 0;
+}
+
+.phase-timeline {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  font-family: 'IBM Plex Mono', monospace;
+  flex-shrink: 0;
+}
+
+.chevron {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+  color: var(--text-dim);
+}
+
+.phase.open .chevron { transform: rotate(180deg); }
+
+/* ── CURRENT PHASE BADGE ── */
+.current-badge {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  background: rgba(0, 255, 136, 0.12);
+  color: var(--accent);
+  border: 1px solid rgba(0, 255, 136, 0.25);
+  animation: badge-pulse 2.5s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+@keyframes badge-pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 4px rgba(0,255,136,0.15); }
+  50% { opacity: 0.7; box-shadow: 0 0 12px rgba(0,255,136,0.3); }
+}
+
+/* ── PROGRESS BAR ── */
+.progress-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0 1.4rem 0.8rem;
+  width: 100%;
+}
+
+.progress-track {
+  flex: 1;
+  height: 4px;
+  background: var(--bg);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.6s ease;
+}
+
+.progress-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  color: var(--text-dim);
+  flex-shrink: 0;
+  min-width: 6ch;
+  text-align: right;
+}
+
+/* ── PHASE BODY ── */
+.phase-body {
+  display: none;
+  padding: 0 1.4rem 1.4rem;
+}
+
+.phase.open .phase-body { display: block; }
+
+.section-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 1.4rem 0 0.7rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-title:first-child { margin-top: 0; }
+
+/* ── STATUS ITEMS ── */
+.item-list { list-style: none; }
+
+.item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding: 0.4rem 0;
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.status {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  border-radius: 50%;
+}
+
+.status-done {
+  color: var(--done);
+  font-size: 0.85rem;
+}
+.status-done::after { content: "✓"; font-weight: 700; }
+
+.status-progress {
+  border: 2px solid var(--progress);
+  width: 16px;
+  height: 16px;
+  position: relative;
+  animation: spin-ring 2s linear infinite;
+}
+
+.status-progress::after {
+  content: "";
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  background: var(--progress);
+  border-radius: 50%;
+  top: -1px;
+  right: -1px;
+  animation: glow-dot 2s ease-in-out infinite;
+}
+
+@keyframes spin-ring {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes glow-dot {
+  0%, 100% { box-shadow: 0 0 3px var(--progress); }
+  50% { box-shadow: 0 0 8px var(--progress), 0 0 14px rgba(34,211,238,0.3); }
+}
+
+.status-not {
+  border: 1.5px solid var(--notstarted);
+  width: 16px;
+  height: 16px;
+}
+
+.item-text { color: var(--text); }
+.item.done .item-text { color: var(--text); }
+.item.not-started .item-text { color: var(--text-dim); }
+
+/* ── SIGNAL BLOCK ── */
+.signal {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  background: var(--bg);
+  border-left: 3px solid;
+  padding: 0.8rem 1rem;
+  margin-top: 1.2rem;
+  border-radius: 0 6px 6px 0;
+  line-height: 1.6;
+  word-break: break-word;
+}
+
+/* ── INDUSTRIES ── */
+.industries-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+  margin-top: 0.8rem;
+}
+
+.industry-card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 1.1rem;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.industry-card:hover {
+  border-color: #2a3a4a;
+  transform: translateY(-1px);
+}
+
+.industry-name {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-bright);
+  margin-bottom: 0.5rem;
+}
+
+.industry-salary {
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+.salary-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.salary-flag { font-size: 0.72rem; }
+
+/* ── TARGET ── */
+.target-section {
+  background: linear-gradient(135deg, rgba(0,255,136,0.06), rgba(91,138,245,0.06));
+  border: 1px solid rgba(0,255,136,0.2);
+  border-radius: var(--radius);
+  padding: 2rem;
+  text-align: center;
+  margin: 2.5rem 0 1.5rem;
+}
+
+.target-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 0.6rem;
+}
+
+.target-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: clamp(1.1rem, 3vw, 1.5rem);
+  font-weight: 700;
+  color: var(--text-bright);
+  margin-bottom: 0.7rem;
+}
+
+.target-desc {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  max-width: 600px;
+  margin: 0 auto 1rem;
+  line-height: 1.6;
+}
+
+.target-salary {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.target-salary .divider {
+  color: var(--text-dim);
+  margin: 0 0.5rem;
+}
+
+/* ── FOOTER ── */
+.footer {
+  text-align: center;
+  padding: 2rem 1rem 1rem;
+  border-top: 1px solid var(--border);
+  margin-top: 1rem;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+/* ── PHASE ACCENT COLORS ── */
+.phase[data-accent="green"] .phase-number { background: rgba(0,255,136,0.12); color: var(--accent); }
+.phase[data-accent="green"] .progress-fill { background: var(--accent); }
+.phase[data-accent="green"] .signal { border-color: var(--accent); }
+
+.phase[data-accent="blue"] .phase-number { background: rgba(91,138,245,0.12); color: var(--accent3); }
+.phase[data-accent="blue"] .progress-fill { background: var(--accent3); }
+.phase[data-accent="blue"] .signal { border-color: var(--accent3); }
+
+.phase[data-accent="orange"] .phase-number { background: rgba(255,107,53,0.12); color: var(--accent2); }
+.phase[data-accent="orange"] .progress-fill { background: var(--accent2); }
+.phase[data-accent="orange"] .signal { border-color: var(--accent2); }
+
+.phase[data-accent="purple"] .phase-number { background: rgba(192,132,252,0.12); color: var(--purple); }
+.phase[data-accent="purple"] .progress-fill { background: var(--purple); }
+.phase[data-accent="purple"] .signal { border-color: var(--purple); }
+
+.phase[data-accent="yellow"] .phase-number { background: rgba(250,204,21,0.12); color: var(--yellow); }
+.phase[data-accent="yellow"] .progress-fill { background: var(--yellow); }
+.phase[data-accent="yellow"] .signal { border-color: var(--yellow); }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 600px) {
+  .container { padding: 1rem 0.8rem 3rem; }
+  .hero { padding: 2rem 0.5rem 1.8rem; }
+  .phase-header { padding: 0.9rem 1rem; gap: 0.5rem; }
+  .phase-body { padding: 0 1rem 1rem; }
+  .progress-row { padding: 0 1rem 0.7rem; }
+  .phase-title { font-size: 0.82rem; }
+  .phase-timeline { display: none; }
+  .industries-grid { grid-template-columns: 1fr; }
+  .target-section { padding: 1.5rem 1rem; }
+  .salary-row { flex-direction: column; gap: 0.2rem; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- HERO -->
+  <header class="hero">
+    <h1>→ Principal <span class="accent">Secure Infrastructure</span> Engineer</h1>
+    <p class="subtitle">Bitcoin security · Blockchain protocol auditing · Confidential computing · AI infrastructure · High-trust systems</p>
+  </header>
+
+  <!-- ═══════════ PHASE 1 ═══════════ -->
+  <section class="phase open" data-accent="green">
+    <div class="phase-header" onclick="togglePhase(this)">
+      <span class="phase-number">01</span>
+      <span class="phase-title">Secure Infrastructure Foundation</span>
+      <span class="current-badge">CURRENT PHASE</span>
+      <span class="phase-timeline">Months 1–6</span>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="progress-row">
+      <div class="progress-track"><div class="progress-fill" style="width:25%"></div></div>
+      <span class="progress-label">5/20 done</span>
+    </div>
+    <div class="phase-body">
+      <h3 class="section-title">Core Skills</h3>
+      <ul class="item-list">
+        <li class="item done"><span class="status status-done"></span><span class="item-text">Linux hardening, TLS, mTLS, SSH, firewalls, systemd</span></li>
+        <li class="item done"><span class="status status-done"></span><span class="item-text">Kubernetes security: RBAC, NetworkPolicy, admission control, secrets, runtime security</span></li>
+        <li class="item in-progress"><span class="status status-progress"></span><span class="item-text">Cloud security: IAM, VPC design, private networking, KMS, audit logs</span></li>
+        <li class="item done"><span class="status status-done"></span><span class="item-text">Threat modeling for production infrastructure: STRIDE, PASTA, attack trees applied to lnaudit and Lightning node deployments; threat model documents written, real bugs found and fixed in lnaudit v0.1.1</span></li>
+        <li class="item in-progress"><span class="status status-progress"></span><span class="item-text">Go/Rust security basics: safe defaults, dependency scanning, secure APIs</span></li>
+      </ul>
+
+      <h3 class="section-title">Tools to Master</h3>
+      <ul class="item-list">
+        <li class="item done"><span class="status status-done"></span><span class="item-text">Trivy, Grype, Syft, Cosign, Falco, Cilium, OPA/Gatekeeper</span></li>
+        <li class="item in-progress"><span class="status status-progress"></span><span class="item-text">AWS IAM Access Analyzer, GuardDuty, CloudTrail, Security Hub</span></li>
+        <li class="item in-progress"><span class="status status-progress"></span><span class="item-text">Nmap, Wireshark, Burp Suite, Semgrep</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">GDB/Ghidra lightly (not the main lane)</span></li>
+      </ul>
+
+      <h3 class="section-title">Where to Learn</h3>
+      <ul class="item-list">
+        <li class="item done"><span class="status status-done"></span><span class="item-text">A Cloud Guru / Pluralsight: Kubernetes and cloud security paths</span></li>
+        <li class="item done"><span class="status status-done"></span><span class="item-text">Killer.sh: CKS (Certified Kubernetes Security Specialist) labs</span></li>
+        <li class="item in-progress"><span class="status status-progress"></span><span class="item-text">AWS Security Specialty: hands-on labs via free tier</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">HackTheBox Academy: infrastructure-focused tracks</span></li>
+      </ul>
+
+      <h3 class="section-title">Certifications</h3>
+      <ul class="item-list">
+        <li class="item done"><span class="status status-done"></span><span class="item-text">CKA (Certified Kubernetes Administrator)</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">CKS (Certified Kubernetes Security Specialist)</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">AWS Security Specialty</span></li>
+      </ul>
+
+      <h3 class="section-title">Blockchain Protocol Security</h3>
+      <ul class="item-list">
+        <li class="item done"><span class="status status-done"></span><span class="item-text">Bitcoin protocol internals: consensus, script, transaction structure, P2P messaging</span></li>
+        <li class="item done"><span class="status status-done"></span><span class="item-text">Bitcoin Core source deep dive: EvalScript, OP_CHECKSIG, OP_CHECKMULTISIG off-by-one bug, sighash algorithm (legacy + BIP 341 Taproot), PSBT roles (BIP 174)</span></li>
+        <li class="item done"><span class="status status-done"></span><span class="item-text">Schnorr signature linearity and FROST threshold signing: DKG, 2-round signing, Lagrange interpolation, MuSig2 vs FROST vs MPC-CMP</span></li>
+        <li class="item in-progress"><span class="status status-progress"></span><span class="item-text">Lightning protocol: BOLT specs, HTLC mechanics, channel state machine, penalty transactions</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Solidity fundamentals: storage layout, reentrancy, access control, upgradeable proxies</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Damn Vulnerable DeFi + Ethernaut: hands-on smart contract exploitation labs</span></li>
+      </ul>
+
+      <h3 class="section-title">Offensive Security (OffSec Track)</h3>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">PEN-200 (PWK): penetration testing foundations, Kali, enumeration, exploitation</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">OSCP certification: the industry baseline for offensive credibility</span></li>
+      </ul>
+
+      <div class="signal">
+        // TARGET: Publish lnaudit properly — docs, scoring system, remediation guide, test fixtures. ✅ DONE — v0.2.0 released with 30+ checks, live gRPC scanning, CVE database, GitHub Pages docs.
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ PHASE 2 ═══════════ -->
+  <section class="phase" data-accent="blue">
+    <div class="phase-header" onclick="togglePhase(this)">
+      <span class="phase-number">02</span>
+      <span class="phase-title">Bitcoin / Lightning Security Reputation</span>
+      <span class="phase-timeline">Months 6–12</span>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="progress-row">
+      <div class="progress-track"><div class="progress-fill" style="width:19%"></div></div>
+      <span class="progress-label">4/21 done</span>
+    </div>
+    <div class="phase-body">
+      <h3 class="section-title">lnaudit Expansion</h3>
+      <ul class="item-list">
+        <li class="item done"><span class="status status-done"></span><span class="item-text">Config checks, port exposure, TLS, backup hygiene, Tor/privacy</span></li>
+        <li class="item done"><span class="status status-done"></span><span class="item-text">Live gRPC scanning: version/CVE, sync, peers, force-close, balance</span></li>
+        <li class="item done"><span class="status status-done"></span><span class="item-text">Open port scanning for LND and Bitcoin services</span></li>
+        <li class="item in-progress"><span class="status status-progress"></span><span class="item-text">Confidence levels and SARIF output for CI/CD</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Macaroon permission auditing and TLS cipher probing</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Docker, systemd, and Kubernetes deployment checks for LND operators</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Write the definitive Lightning node hardening guide</span></li>
+      </ul>
+
+      <h3 class="section-title">Community</h3>
+      <ul class="item-list">
+        <li class="item in-progress"><span class="status status-progress"></span><span class="item-text">Build relationships with routing node operators, LND maintainers, security engineers</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Share with relevant Lightning operators, maintainers, and communities</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Respond to every serious GitHub issue (visibility compounds)</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">1 responsible disclosure if you find a real issue</span></li>
+      </ul>
+
+      <h3 class="section-title">Public Output</h3>
+      <ul class="item-list">
+        <li class="item in-progress"><span class="status status-progress"></span><span class="item-text">3 technical write-ups minimum (LND deep dive published)</span></li>
+        <li class="item in-progress"><span class="status status-progress"></span><span class="item-text">1 conference or community talk proposal (Btrust demo May 30)</span></li>
+        <li class="item done"><span class="status status-done"></span><span class="item-text">GitHub project with clean roadmap and release history</span></li>
+      </ul>
+
+      <h3 class="section-title">Blockchain Protocol Security</h3>
+      <ul class="item-list">
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Blue team: Bitcoin Core node hardening, mempool policy, eclipse attack defenses</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Red team: simulate replacement cycling, channel jamming, and pinning attacks on regtest</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Smart contract auditing: Slither, Mythril, Foundry fuzzing for EVM protocols</span></li>
+        <li class="item done"><span class="status status-done"></span><span class="item-text">Study real exploits: Wormhole bridge, Ronin, Nomad -- whitepaper-quality case files with invariants, kill chains, detection patterns (NonsoAmadi10/blockchain-exploits)</span></li>
+        <li class="item done"><span class="status status-done"></span><span class="item-text">Lightning Network PR security review: reviewed LND PRs #10616 (silent HTLC fund loss), #10772 (payment lifecycle race), #10816 (UTXO contention + fee ratchet stranding funds), #10779 (private key caching key-material trade-offs), #10813 (Tor v2 removal); posted security comments on GitHub</span></li>
+      </ul>
+
+      <h3 class="section-title">Offensive Security (OffSec Track)</h3>
+      <ul class="item-list">
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">OSCP passed: prove you can find and exploit real vulnerabilities, not just scan for them</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">WEB-200 (OSWA) or WEB-300 (OSWE): web application security for API and gRPC attack surfaces</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Apply offensive skills to lnaudit: build checks inspired by real exploitation techniques</span></li>
+      </ul>
+
+      <div class="signal">
+        // TARGET: Become known as the person working on Lightning operational security. Adoption is the signal.
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ PHASE 3 ═══════════ -->
+  <section class="phase" data-accent="orange">
+    <div class="phase-header" onclick="togglePhase(this)">
+      <span class="phase-number">03</span>
+      <span class="phase-title">Confidential Computing Bridge</span>
+      <span class="phase-timeline">Months 12–18</span>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="progress-row">
+      <div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>
+      <span class="progress-label">0/19 done</span>
+    </div>
+    <div class="phase-body">
+      <h3 class="section-title">Core Skills</h3>
+      <ul class="item-list">
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Remote attestation flows end to end</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">AWS Nitro Enclaves and AMD SEV-SNP</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Intel TDX/SGX fundamentals</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Key isolation and signing workflows</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Threat models for host vs guest trust boundaries</span></li>
+      </ul>
+
+      <h3 class="section-title">Flagship Project</h3>
+      <ul class="item-list">
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">TEE-backed Lightning key management prototype</span></li>
+        <li class="item in-progress"><span class="status status-progress"></span><span class="item-text">Key management and custody system (Fireblocks deep-dive): HSM integration (PKCS#11 + SoftHSM2), FROST/MuSig2 threshold signing, hot/cold wallet infrastructure, policy engine (spending limits, multi-approver quorum, velocity controls, time locks), PSBT-native air-gapped signing workflow -- integrating platform engineering, system design, threat modeling, and Bitcoin protocol foundations into one production-grade prototype</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Attestation required before every sensitive signing operation</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Clear threat model: what it protects against and what it does not</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Publish architecture, demo, limitations, and full security analysis</span></li>
+      </ul>
+
+      <h3 class="section-title">Tools &amp; Resources</h3>
+      <ul class="item-list">
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Nitro Enclaves SDK: test on supported EC2 instance types</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Rust or Go enclave client/server</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">KMS integration and attestation document validation</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">CCC Slack: confidentialcomputing.io (free to join)</span></li>
+      </ul>
+
+      <h3 class="section-title">Blockchain Protocol Security</h3>
+      <ul class="item-list">
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Cross-chain bridge security: MPC signers, relayer trust models, message verification</span></li>
+        <li class="item done"><span class="status status-done"></span><span class="item-text">Threat modeling frameworks: STRIDE, PASTA, attack trees -- applied to lnaudit, Lightning node deployments, cloud infra; full threat model written and bugs fixed in production (lnaudit v0.1.1)</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Consensus mechanism auditing: PoS validator security, slashing conditions, finality guarantees</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Formal verification basics: apply to Bitcoin Script and smart contract invariants</span></li>
+      </ul>
+
+      <h3 class="section-title">Offensive Security (OffSec Track)</h3>
+      <ul class="item-list">
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">PEN-300 (OSEP): advanced evasion, custom C2, Active Directory exploitation</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Apply red team methodology to TEE/enclave threat models: side-channel, attestation bypass</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">EXP-301 (OSED): binary exploitation fundamentals for low-level security understanding</span></li>
+      </ul>
+
+      <div class="signal">
+        // TARGET: Credible public project connecting Bitcoin infrastructure security with confidential computing. UK Global Talent / Exceptional Talent evidence strengthened.
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ PHASE 4 ═══════════ -->
+  <section class="phase" data-accent="purple">
+    <div class="phase-header" onclick="togglePhase(this)">
+      <span class="phase-number">04</span>
+      <span class="phase-title">AI Infrastructure Security Layer</span>
+      <span class="phase-timeline">Months 18–30</span>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="progress-row">
+      <div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>
+      <span class="progress-label">0/18 done</span>
+    </div>
+    <div class="phase-body">
+      <h3 class="section-title">Core Skills</h3>
+      <ul class="item-list">
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">GPU workload isolation and confidential VM patterns</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Model-serving security and secrets management for inference</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Kubernetes for AI workloads: GPU operators, scheduling security</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Supply chain security for ML pipelines</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Confidential AI concepts: model weight protection, secure inference</span></li>
+      </ul>
+
+      <h3 class="section-title">Systems to Study &amp; Audit</h3>
+      <ul class="item-list">
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">vLLM, Triton Inference Server, Ray</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Kubernetes GPU operators</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">NVIDIA Confidential Computing (developer.nvidia.com)</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">AMD SEV-SNP confidential VM patterns</span></li>
+      </ul>
+
+      <h3 class="section-title">Public Output</h3>
+      <ul class="item-list">
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Secure AI inference deployment blueprint</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Threat model for model-serving infrastructure</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Security review of one open source AI infra component</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Blog series: "Securing High-Trust Compute"</span></li>
+      </ul>
+
+      <h3 class="section-title">Blockchain Protocol Security</h3>
+      <ul class="item-list">
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">DeFi protocol auditing: flash loan vectors, oracle manipulation, governance attacks</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Publish at least 1 independent smart contract or protocol security audit</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Blockchain + AI intersection: on-chain ML oracle security, verifiable compute for models</span></li>
+      </ul>
+
+      <h3 class="section-title">Offensive Security (OffSec Track)</h3>
+      <ul class="item-list">
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Red team AI infrastructure: model exfiltration, prompt injection at the infra layer, GPU side-channels</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Contribute offensive research or tooling to open source (Nuclei templates, custom scanners)</span></li>
+      </ul>
+
+      <div class="signal">
+        // TARGET: Staff or Senior Security Engineer role in UK. O-1A evidence file actively building.
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ PHASE 5 ═══════════ -->
+  <section class="phase" data-accent="yellow">
+    <div class="phase-header" onclick="togglePhase(this)">
+      <span class="phase-number">05</span>
+      <span class="phase-title">Principal — Build, Break, Lead Without Managing</span>
+      <span class="phase-timeline">Month 30+</span>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="progress-row">
+      <div class="progress-track"><div class="progress-fill" style="width:0%"></div></div>
+      <span class="progress-label">0/16 done</span>
+    </div>
+    <div class="phase-body">
+      <h3 class="section-title">What You Do at This Level</h3>
+      <ul class="item-list">
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Define security architecture for critical infrastructure systems</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Build internal tools other engineers depend on</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Review designs before they become expensive mistakes</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Own threat models for cloud, crypto, AI, and confidential compute</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Publish research, speak, advise, contribute to open source</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Lead blockchain protocol security reviews: red team and blue team across Bitcoin, EVM, and cross-chain</span></li>
+      </ul>
+
+      <h3 class="section-title">Visa &amp; Reputation Assets</h3>
+      <ul class="item-list">
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">lnaudit adoption at scale</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Published research and responsible disclosures</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Conference talks: BSides, DEF CON, Bitcoin conferences</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Strong letters from maintainers, operators, founders</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">OSS contributions with measurable impact</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">OSCP + OSEP + one specialist cert (OSWE or OSED): full offensive credibility stack</span></li>
+      </ul>
+
+      <h3 class="section-title">USA Transition</h3>
+      <ul class="item-list">
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">O-1A extraordinary ability: your evidence file built over 3 years</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Target US hubs with strong crypto, AI infra, and security ecosystems</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Coinbase, Anchorage, Fireblocks, AI infrastructure companies</span></li>
+        <li class="item not-started"><span class="status status-not"></span><span class="item-text">Optional path to advisory, consulting, or founding a security firm</span></li>
+      </ul>
+
+      <div class="signal">
+        // TARGET: Principal Secure Infrastructure Engineer. Publicly credible in Bitcoin security, confidential computing, and AI infrastructure. USA.
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ INDUSTRIES ═══════════ -->
+  <section class="phase" data-accent="green">
+    <div class="phase-header" onclick="togglePhase(this)">
+      <span class="phase-number">▦</span>
+      <span class="phase-title">Target Industries &amp; Compensation</span>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+    <div class="phase-body">
+      <div class="industries-grid">
+        <div class="industry-card">
+          <div class="industry-name">₿ Bitcoin / Crypto Infrastructure</div>
+          <div class="industry-salary">
+            <div class="salary-row"><span class="salary-flag">🇬🇧 £80k–120k</span><span class="salary-flag">🇺🇸 $150k–250k</span></div>
+          </div>
+        </div>
+        <div class="industry-card">
+          <div class="industry-name">🤖 AI Infrastructure</div>
+          <div class="industry-salary">
+            <div class="salary-row"><span class="salary-flag">🇬🇧 £90k–130k</span><span class="salary-flag">🇺🇸 $180k–350k</span></div>
+          </div>
+        </div>
+        <div class="industry-card">
+          <div class="industry-name">🔐 Confidential Computing</div>
+          <div class="industry-salary">
+            <div class="salary-row"><span class="salary-flag">🇬🇧 £85k–125k</span><span class="salary-flag">🇺🇸 $160k–280k</span></div>
+          </div>
+        </div>
+        <div class="industry-card">
+          <div class="industry-name">🛡 Defence &amp; National Security</div>
+          <div class="industry-salary">
+            <div class="salary-row"><span class="salary-flag">🇬🇧 £80k–140k</span><span class="salary-flag">🇺🇸 $130k–220k</span></div>
+          </div>
+        </div>
+        <div class="industry-card">
+          <div class="industry-name">💳 Fintech &amp; Payments</div>
+          <div class="industry-salary">
+            <div class="salary-row"><span class="salary-flag">🇬🇧 £75k–110k</span><span class="salary-flag">🇺🇸 $140k–230k</span></div>
+          </div>
+        </div>
+        <div class="industry-card">
+          <div class="industry-name">🏴‍☠️ Elite Security Consultancies</div>
+          <div class="industry-salary">
+            <div class="salary-row"><span class="salary-flag">🇬🇧 £80k–130k</span><span class="salary-flag">🇺🇸 $150k–260k</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ TARGET ═══════════ -->
+  <div class="target-section">
+    <div class="target-label">End State</div>
+    <div class="target-title">Principal Secure Infrastructure Engineer</div>
+    <p class="target-desc">Bitcoin node security · Blockchain protocol auditing · TEE systems · AI infrastructure security · Public research · High-trust systems</p>
+    <div class="target-salary">
+      US $200k–350k+<span class="divider">|</span>UK £100k–160k+
+    </div>
+  </div>
+
+  <!-- ═══════════ FOOTER ═══════════ -->
+  <footer class="footer">
+    Last updated: May 2026 · This roadmap is a living document
+  </footer>
+
+</div>
+
+<script>
+function togglePhase(header) {
+  var phase = header.closest('.phase');
+  phase.classList.toggle('open');
+}
+</script>
+
+</body>
+</html>
