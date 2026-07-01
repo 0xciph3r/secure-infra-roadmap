@@ -20,6 +20,16 @@ A living document tracking my progression through five phases:
 
 Each item has a progress indicator showing what is done, in progress, or not yet started.
 
+## Latest Milestone
+
+Completed a major confidential-computing milestone through the
+[attested-custody](https://github.com/0xciph3r/attested-custody) project:
+
+1. Whitepaper + architecture narrative published
+2. Go reference implementation completed (phase 1 hardening)
+3. STRIDE threat model and mitigation roadmap documented
+4. Public write-up produced for institutional custody problem framing
+
 ## Why Public
 
 Making this public serves two purposes:
