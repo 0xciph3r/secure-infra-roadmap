@@ -1,6 +1,6 @@
 # Secure Infrastructure Engineer Roadmap
 
-A personal roadmap from Platform/DevOps Engineer to Principal Secure Infrastructure Engineer.
+A public execution roadmap from Platform/DevOps Engineer to Principal Secure Infrastructure Engineer.
 
 **HPC . Core engineering . Platform security . Bitcoin infrastructure . Lagos > UK > USA**
 
@@ -10,7 +10,7 @@ A personal roadmap from Platform/DevOps Engineer to Principal Secure Infrastruct
 
 ## What This Is
 
-A living document tracking my progression through five phases:
+A living roadmap tracking progression through five phases:
 
 1. **Secure Infrastructure Foundation** - Linux hardening, Kubernetes security, cloud security, threat modeling
 2. **Bitcoin / Lightning Security Reputation** - Building [lnaudit](https://github.com/0xciph3r/lnaudit), community engagement, public output
@@ -18,7 +18,7 @@ A living document tracking my progression through five phases:
 4. **HPC + Platform Security** - GPU/cluster isolation, scheduler hardening, multi-tenant compute security
 5. **Principal Level** - Architecture ownership, research, speaking, advising
 
-Each item has a progress indicator showing what is done, in progress, or not yet started.
+Each phase contains concrete tasks with clear status markers (done / in-progress / not-started).
 
 ## Latest Milestone
 
@@ -29,6 +29,16 @@ Completed a major confidential-computing milestone through the
 2. Go reference implementation completed (phase 1 hardening)
 3. STRIDE threat model and mitigation roadmap documented
 4. Public write-up produced for institutional custody problem framing
+
+## Current Priority
+
+**HPC + Core Engineering + Platform Security**
+
+Immediate emphasis:
+
+1. Secure multi-tenant compute primitives
+2. Scheduler/runtime hardening (Kubernetes + batch/HPC controls)
+3. Performance-aware security controls for high-trust systems
 
 ## Learning Links
 
